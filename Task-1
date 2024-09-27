@@ -1,0 +1,78 @@
+/*The provided Java code is a program called "GradeTracker" that allows users to input five
+grades, calculates the average, and determines the corresponding letter grade and GPA. 
+It uses an array to store the grades, calculates the total, and then divides it by the number
+of grades to get the average. The program also includes two methods, "getLetterGrade" and "getGPA" ,
+to determine the letter grade and GPA based on the average grade. */
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
+
+public class StudentGradeTracker {
+    private HashMap<String, ArrayList<Double>> grades;
+
+    public StudentGradeTracker() {
+        grades = new HashMap<>();
+    }
+
+    public void addGrade(String subject, double grade) {
+        grades.putIfAbsent(subject, new ArrayList<>());
+        grades.get(subject).add(grade);
+    }
+
+    public double calculateAverage() {
+        double total = 0;
+        int count = 0;
+
+        for (ArrayList<Double> subjectGrades : grades.values()) {
+            for (double grade : subjectGrades) {
+                total += grade;
+                count++;
+            }
+        }
+
+        return count == 0 ? 0 : total / count;
+    }
+
+    public String getLetterGrade(double average) {
+        if (average >= 90) return "A";
+        else if (average >= 80) return "B";
+        else if (average >= 70) return "C";
+        else if (average >= 60) return "D";
+        else return "F";
+    }
+
+    public void displayGrades() {
+        System.out.println("Grades by Subject:");
+        for (String subject : grades.keySet()) {
+            System.out.println(subject + ": " + grades.get(subject));
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        StudentGradeTracker tracker = new StudentGradeTracker();
+
+        while (true) {
+            System.out.println("Enter subject name (or type 'exit' to finish):");
+            String subject = scanner.nextLine();
+            if (subject.equalsIgnoreCase("exit")) break;
+
+            System.out.println("Enter grade for " + subject + ":");
+            double grade = scanner.nextDouble();
+            scanner.nextLine(); // Consume newline
+
+            tracker.addGrade(subject, grade);
+        }
+
+        tracker.displayGrades();
+        
+        double average = tracker.calculateAverage();
+        String letterGrade = tracker.getLetterGrade(average);
+        
+        System.out.printf("Overall Average Grade: %.2f\n", average);
+        System.out.println("Letter Grade: " + letterGrade);
+
+        scanner.close();
+    }
+}
